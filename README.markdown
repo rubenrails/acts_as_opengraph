@@ -125,6 +125,9 @@ See the complete list of allowed attributes and options [here](http://developers
 * Add tests for it. This is important so I don’t break it in a future version unintentionally.
 * Send me a pull request. Bonus points for topic branches.
 
+## Contributors
+
+* [Eric Hill](https://github.com/rhizome) - Updated the meta attribute to reflect the current OG spec
 
 ## Copyright
 
