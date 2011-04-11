@@ -14,7 +14,7 @@ module ActsAsOpengraphHelper
     tags = tags.join("\n")
     tags.respond_to?(:html_safe) ? tags.html_safe : tags
   end
-  
+
   # Displays the Facebook Like Button in your views.
   #
   # @param [Object, #opengraph_data] obj An instance of your ActiveRecord model that responds to opengraph_data
@@ -30,10 +30,10 @@ module ActsAsOpengraphHelper
     raise(ArgumentError.new, "You need to call acts_as_opengraph on your #{obj.class} model") unless obj.respond_to?(:opengraph_data)
     href = options[:href] ? options[:href] : obj.opengraph_url
     return unless href.present?
-    
+
     config = { :layout => :standard, :show_faces => false, :width => 450, :action => :like, :colorscheme => :light }
     config.update(options) if options.is_a?(Hash)
-    
+
     o_layout = config[:layout].to_sym
     if o_layout == :standard
       config[:height] = config[:show_faces].to_s.to_sym == :true ? 80 : 35
@@ -42,7 +42,35 @@ module ActsAsOpengraphHelper
     elsif o_layout == :box_count
       config[:height] = 65
     end
-    
-    %(<iframe src="http://www.facebook.com/plugins/like.php?href=#{CGI.escape(href)}&amp;layout=#{config[:layout]}&amp;show_faces=#{config[:show_faces]}&amp;width=#{config[:width]}&amp;action=#{config[:action]}&amp;colorscheme=#{config[:colorscheme]}&amp;height=#{config[:height]}" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:#{config[:width]}px; height:#{config[:height]}px;" allowTransparency="true"></iframe>)
+    config[:locale] ||= 'en_US'
+
+    if config[:fbxml]
+      unless @fb_sdk_included
+        content_for :javascripts, fb_javascript_include_tag( config[:locale], config[:appid] )
+      end
+      %(<fb:like href="#{CGI.escape(href)}" layout="#{config[:layout]}" show_faces="#{config[:show_faces]}" action="#{config[:action]}" colorscheme="#{config[:colorscheme]}" width="#{config[:width]}" height="#{config[:height]}" font="#{config[:font]}"></fb:like>)
+    else
+      %(<iframe src="http://www.facebook.com/plugins/like.php?href=#{CGI.escape(href)}&amp;layout=#{config[:layout]}&amp;show_faces=#{config[:show_faces]}&amp;width=#{config[:width]}&amp;action=#{config[:action]}&amp;colorscheme=#{config[:colorscheme]}&amp;height=#{config[:height]}" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:#{config[:width]}px; height:#{config[:height]}px;" allowTransparency="true"></iframe>)
+    end
+  end
+
+  def fb_javascript_include_tag(locale='en_US', appid='')
+    @fb_sdk_included = true
+    async_fb = <<-END
+      <div id="fb-root"></div>
+      <script>
+        window.fbAsyncInit = function() {
+          FB.init({appId: '#{ appid }', status: true, cookie: true,
+                   xfbml: true});
+        };
+        (function() {
+          var e = document.createElement('script'); e.async = true;
+          e.src = document.location.protocol +
+            '//connect.facebook.net/#{locale}/all.js';
+          document.getElementById('fb-root').appendChild(e);
+        }());
+      </script>
+    END
+    async_fb.html_safe
   end
 end
