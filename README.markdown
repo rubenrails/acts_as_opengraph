@@ -118,6 +118,18 @@ But that's not the Rails way, so instead of doing that, you can pass an `href` o
 	
 See the complete list of allowed attributes and options [here](http://developers.facebook.com/docs/reference/plugins/like/).
 
+### Using the XFBML version
+
+The XFBML version is more versatile, but requires use of the JavaScript SDK.
+
+	# app/views/movies/show.html.erb
+	
+	# You can use the following helper method to load the JavaScript SDK
+	<%= fb_javascript_include_tag YOUR_APP_ID %>
+	
+	# Now you can pass the :xfbml option to the like button helper
+	<%= like_button_for @movie, :xfbml => true %>
+
 ## Note on Patches/Pull Requests
 
 * Fork the project.
@@ -128,6 +140,7 @@ See the complete list of allowed attributes and options [here](http://developers
 ## Contributors
 
 * [Eric Hill](https://github.com/rhizome) - Updated the meta attribute to reflect the current OG spec
+* [Timo Göllner](https://github.com/TeaMoe) - Integrated Like Button via facebook XFBML tag
 
 ## Copyright
 

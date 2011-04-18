@@ -43,6 +43,7 @@ class MovieTest < Test::Unit::TestCase
 
   GENERATED_LIKE_BUTTON = %(<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0117500%2F&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>)
   GENERATED_LIKE_BUTTON_CUSTOM_URL = %(<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fmovies%2F6&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>)
+  GENERATED_LIKE_BUTTON_FBXML = %(<fb:like href=\"http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0117500%2F\" layout=\"standard\" show_faces=\"false\" action=\"like\" colorscheme=\"light\" width=\"450\" height=\"35\" font=\"\"></fb:like>)
   def setup
     setup_db
     assert @movie = Movie.create!(:title => MOVIE_NAME, :description => MOVIE_DESCRIPTION, :imdb => MOVIE_URL)
@@ -98,6 +99,9 @@ class MovieTest < Test::Unit::TestCase
   def test_like_button_helper
     assert_equal GENERATED_LIKE_BUTTON, like_button_for(@movie)
     assert_equal GENERATED_LIKE_BUTTON_CUSTOM_URL, like_button_for(@movie, :href => "http://example.com/movies/6")
+    
+    @fb_sdk_included = true # Tells our helper we've already included the facebook JS SDK
+    assert_equal GENERATED_LIKE_BUTTON_FBXML, like_button_for(@movie, :xfbml => true)
     
     # There's no way of getting the href attribute for this Book, so it returns nil
     assert_nil like_button_for(@book)

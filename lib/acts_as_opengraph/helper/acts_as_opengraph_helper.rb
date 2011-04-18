@@ -44,7 +44,7 @@ module ActsAsOpengraphHelper
     end
     config[:locale] ||= 'en_US'
 
-    if config[:fbxml]
+    if config[:xfbml]
       unless @fb_sdk_included
         content_for :javascripts, fb_javascript_include_tag( config[:locale], config[:appid] )
       end
@@ -54,7 +54,7 @@ module ActsAsOpengraphHelper
     end
   end
 
-  def fb_javascript_include_tag(locale='en_US', appid='')
+  def fb_javascript_include_tag(appid='', locale='en_US')
     @fb_sdk_included = true
     async_fb = <<-END
       <div id="fb-root"></div>
