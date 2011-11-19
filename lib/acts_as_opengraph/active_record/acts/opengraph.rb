@@ -10,6 +10,7 @@ module ActiveRecord
         def acts_as_opengraph(options = {})
           # don't allow multiple calls
           return if included_modules.include? InstanceMethods
+          return unless table_exists?
           
           extend ClassMethods
           
@@ -79,7 +80,7 @@ module ActiveRecord
           alt_names = alternative_names_for(att_name)
           columns_to_check = [att_name] + alt_names
           columns_to_check.each do |column_name| 
-            return column_name.to_sym if table_exists? && column_names.include?(column_name.to_s)
+            return column_name.to_sym if column_names.include?(column_name.to_s)
           end
           
           # Define placeholder method
