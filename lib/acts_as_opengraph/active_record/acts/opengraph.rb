@@ -22,11 +22,11 @@ module ActiveRecord
             options[:columns]["#{att_name}".to_sym] ||= alternative_column_name_for("og_#{att_name}".to_sym)
           end
           
-          write_inheritable_attribute :opengraph_atts, opengraph_atts
-          class_inheritable_reader :opengraph_atts
+          class_attribute :opengraph_atts
+          self.opengraph_atts = opengraph_atts
           
-          write_inheritable_attribute :options, options
-          class_inheritable_reader :options
+          class_attribute :options
+          self.options = options
           
           opengraph_atts.each do |att_name|
             define_method "opengraph_#{att_name}" do
