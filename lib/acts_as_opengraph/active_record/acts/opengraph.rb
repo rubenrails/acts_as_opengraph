@@ -10,6 +10,7 @@ module ActiveRecord
         def acts_as_opengraph(options = {})
           # don't allow multiple calls
           return if included_modules.include? InstanceMethods
+          return unless table_exists?
           
           extend ClassMethods
           
