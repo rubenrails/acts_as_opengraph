@@ -1,6 +1,6 @@
 # acts\_as\_opengraph
 
-ActiveRecord extension that turns your models into [facebook opengraph](http://developers.facebook.com/docs/opengraph/) objects.
+**ActiveRecord** / **Mongoid** extension that turns your models into [facebook opengraph](http://developers.facebook.com/docs/opengraph/) objects.
  
 ## Installation
 
@@ -10,11 +10,20 @@ Now just add the gem dependency in your projects configuration.
 
 ## Usage
 
-### Adding acts\_as\_opengraph
+### Adding acts\_as\_opengraph for ActiveRecord
 
 	# app/models/movie.rb
 	class Movie < ActiveRecord::Base
 		acts_as_opengraph
+	end
+
+### Adding acts\_as\_opengraph for Mongoid
+
+	# app/models/movie.rb
+	class Movie
+	  include Mongoid::Acts::Opengraph
+
+		acts_as_opengraph # This should be placed after model fields declaration
 	end
 	
 ### Generating the opengraph meta tags
@@ -141,6 +150,7 @@ The XFBML version is more versatile, but requires use of the JavaScript SDK.
 
 * [Eric Hill](https://github.com/rhizome) - Updated the meta attribute to reflect the current OG spec
 * [Timo Göllner](https://github.com/TeaMoe) - Integrated Like Button via facebook XFBML tag
+* [Alex Kravets](https://github.com/AlexKravets) - Mongoid Support
 
 ## Copyright
 

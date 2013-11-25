@@ -1,3 +1,7 @@
+if defined? Mongoid
+  require 'acts_as_opengraph/mongoid/acts/opengraph'
+end
+
 if defined? ActiveRecord::Base
   require File.join(File.dirname(__FILE__), 'acts_as_opengraph', 'active_record', 'acts', 'opengraph')
   ActiveRecord::Base.send :include, ActiveRecord::Acts::Opengraph
