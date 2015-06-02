@@ -1,4 +1,5 @@
 module ActsAsOpengraphHelper
+  NON_ESCAPED_ATTRIBUTES = %w(og:image og:url)
   # Generates the opengraph meta tags for your views
   #
   # @param [Object, #opengraph_data] obj An instance of your ActiveRecord model that responds to opengraph_data
@@ -10,7 +11,11 @@ module ActsAsOpengraphHelper
     raise(ArgumentError.new, "You need to call acts_as_opengraph on your #{obj.class} model") unless obj.respond_to?(:opengraph_data)
     tags = obj.opengraph_data.map do |att|
       att_name = att[:name] == "og:site_name" ? att[:name] : att[:name].dasherize
-      %(<meta property="#{att_name}" content="#{Rack::Utils.escape_html(att[:value])}"/>)
+      if NON_ESCAPED_ATTRIBUTES.include? att_name
+        %(<meta property="#{att_name}" content="#{att[:value]}"/>)
+      else
+        %(<meta property="#{att_name}" content="#{Rack::Utils.escape_html(att[:value])}"/>)
+      end
     end
     tags = tags.join("\n")
     tags.respond_to?(:html_safe) ? tags.html_safe : tags
